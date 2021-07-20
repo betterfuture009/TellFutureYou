@@ -20,25 +20,25 @@ class LabelFormInput extends Component {
     }
 
     render() {
-        const { 
-            type, 
-            label, 
+        const {
+            type,
+            label,
             value,
             maxLength,
             autoCapitalize,
-            placeholder, 
+            placeholder,
             placeholderTextColor,
-            onChangeText, 
-            onRefInput, 
-            returnKeyType, 
-            onSubmitEditing, 
+            onChangeText,
+            onRefInput,
+            returnKeyType,
+            onSubmitEditing,
             editable
         } = this.props;
 
         return (
             <View style={
                 [
-                    this.props.style, 
+                    this.props.style,
                     (type == "textview" || type == "address") ? styles.containerTextView : styles.container]
             }>
                 <View>
@@ -105,7 +105,7 @@ class LabelFormInput extends Component {
                         autoCapitalize='none'
                         keyboardType={'email-address'}
                         autoCorrect={false}
-                        autoCapitalize={autoCapitalize}
+                        // autoCapitalize={autoCapitalize}
                         style={[styles.textInput, editable ? {} : styles.disabledTextInput]}
                         placeholderTextColor={placeholderTextColor ? placeholderTextColor : "#fff"}
                         underlineColorAndroid='transparent'
@@ -187,10 +187,10 @@ class LabelFormInput extends Component {
                                         }}
                                       />
                                     ))}
-                                  </ScrollView>  
+                                  </ScrollView>
                                 : null
                               }
-                              
+
                             </React.Fragment>
                           )}
                         </GoogleAutoComplete>
@@ -247,7 +247,7 @@ class LabelFormInput extends Component {
                     (this.props.type == "datepicker")
                     ? <DatePicker
                         style={{
-                            width: '100%', borderWidth: 1, borderColor: '#e4e8ea', borderRadius: 25, paddingHorizontal: 15, marginTop: 10, height: 50, paddingTop: 3, 
+                            width: '100%', borderWidth: 1, borderColor: '#e4e8ea', borderRadius: 25, paddingHorizontal: 15, marginTop: 10, height: 50, paddingTop: 3,
                         }}
                         customStyles={{
                           dateInput: {
@@ -275,12 +275,12 @@ class LabelFormInput extends Component {
                       />
                     : null
                 }
-                </View>  
+                </View>
                 {
                     this.props.errorMessage
                     ? <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
                     : null
-                }            
+                }
             </View>
         );
     }
@@ -307,10 +307,10 @@ const styles = StyleSheet.create({
         color: '#a7a7a7',
         marginLeft: 5,
     },
-    
+
     textInput: {
         fontSize: 16,
-        fontFamily: Fonts.regular, 
+        fontFamily: Fonts.regular,
         height: 50,
         borderWidth: 1,
         borderColor: '#e4e8ea',
@@ -342,8 +342,8 @@ const styles = StyleSheet.create({
     },
 
     dropdownBox: {
-        height: 42,   
-        backgroundColor: 'red',  
+        height: 42,
+        backgroundColor: 'red',
     },
 
     dropdownIcon: {
@@ -364,12 +364,12 @@ const styles = StyleSheet.create({
         borderColor: '#e4e8ea',
         paddingLeft: 10,
         paddingRight: 0,
-        borderRadius: 25,    
+        borderRadius: 25,
         marginTop: 10,
     },
 
     disabledTextInput: {
-        backgroundColor: 'lightgray', 
+        backgroundColor: 'lightgray',
         color: 'gray'
     }
 });

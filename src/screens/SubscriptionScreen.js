@@ -22,12 +22,12 @@ import LoadingOverlay from '../components/LoadingOverlay'
 import SubscriptionCell from '../components/Cells/SubscriptionCell'
 import actionTypes from '../actions/actionTypes';
 import {checkInternetConnectivity} from '../functions'
-import { 
-  TOAST_SHOW_TIME, 
-  Status, 
-  SUBSCRIPTION_STANDARD, 
-  SUBSCRIPTION_PREMIUM, 
-  USER_LEVEL 
+import {
+  TOAST_SHOW_TIME,
+  Status,
+  SUBSCRIPTION_STANDARD,
+  SUBSCRIPTION_PREMIUM,
+  USER_LEVEL
 } from '../constants.js'
 
 import Messages from '../theme/Messages'
@@ -53,7 +53,7 @@ class SubscriptionScreen extends Component {
       {
         productId: SUBSCRIPTION_PREMIUM,
       }],
-    }    
+    }
   }
 
   componentDidMount() {
@@ -95,7 +95,7 @@ class SubscriptionScreen extends Component {
         if (receipt) {
           if (this.state.isRequestSubscription) {
             this.finishTransaction(purchase);
-          }          
+          }
         }
       },
     );
@@ -103,8 +103,8 @@ class SubscriptionScreen extends Component {
     this.purchaseErrorSubscription = purchaseErrorListener(
       (error) => {
         if (this.state.isRequestSubscription) {
-          Alert.alert(Messages.SubscriptionCancelled, '');
-        }        
+          Alert.alert('Confirm', Messages.SubscriptionCancelled);
+        }
         this.setState({isLoading: false, isRequestSubscription: false});
       },
     );
@@ -115,12 +115,12 @@ class SubscriptionScreen extends Component {
     try {
         _SELF.setState({isLoading: true});
         const products = await RNIap.getSubscriptions(itemSubs);
-        _SELF.setState({isLoading: false}); 
+        _SELF.setState({isLoading: false});
         if (products && products.length > 0) {
-          _SELF.setState({products});  
+          _SELF.setState({products});
         }
         _SELF.initIAPListener();
-    } 
+    }
     catch (err) {
        console.warn(err.code, err.message);
        _SELF.setState({isLoading: false});
@@ -138,12 +138,12 @@ class SubscriptionScreen extends Component {
         }
         else {
           this.showMessage(Messages.SubscriptionCompleted, true);
-        }        
-      } 
+        }
+      }
       else if (this.props.changeSubscriptionStatus == Status.FAILURE) {
         this.setState({isLoading: false});
-        this.showMessage(Messages.SubscriptionFailed, false);        
-      }      
+        this.showMessage(Messages.SubscriptionFailed, false);
+      }
     }
   }
 
@@ -166,7 +166,7 @@ class SubscriptionScreen extends Component {
         }},
       ],
       {cancelable: false},
-    ); 
+    );
   }
 
   finishTransaction(purchase) {
@@ -178,19 +178,19 @@ class SubscriptionScreen extends Component {
     } else {
       level = USER_LEVEL.PREMIUM;
     }
-    
+
     this.props.dispatch({
         type: actionTypes.CHANGE_SUBSCRIPTION,
         user_id: currentUser._id,
         level,
         subscription: purchase
-    }); 
+    });
   }
 
-  onSubscribe=async()=> {
+  onSubscribe = async () => {
     const isConnected = await checkInternetConnectivity();
     if (isConnected) {
-      const {selectedIndex, products} = this.state; 
+      const {selectedIndex, products} = this.state;
       if (products && products.length > 0 && selectedIndex >= 0) {
         const { currentUser } = this.props;
         const level = currentUser.level;
@@ -201,7 +201,7 @@ class SubscriptionScreen extends Component {
           var message = null;
           if (level == USER_LEVEL.STANDARD && selectedIndex == 1) {
             message = Messages.ConfirmStandardToPremium;
-          } 
+          }
           else if (level == USER_LEVEL.PREMIUM && selectedIndex == 0) {
             message = Messages.ConfirmPremiumToStandard;
           }
@@ -210,26 +210,26 @@ class SubscriptionScreen extends Component {
           }
           else {
             Alert.alert(
+              'Confirm',
               message,
-              '',
               [
                 {text: 'Yes', onPress: () => {
-                  this.requestSubscription(products[selectedIndex].productId);              
+                  this.requestSubscription(products[selectedIndex].productId);
                 }},
                 {text: 'No', onPress: () => {}},
               ],
               {cancelable: false},
-            ); 
+            );
           }
         }
-      } 
+      }
       else {
         this.setState({subscriptionError: Messages.InvalidSubscription});
       }
     }
     else {
       this.toast.show(Messages.NetWorkError, TOAST_SHOW_TIME);
-    }    
+    }
   }
 
   requestSubscription = async (sku) => {
@@ -262,21 +262,21 @@ class SubscriptionScreen extends Component {
             'We were unable to find an active subscription for your account. Please verify your subscription with ' + platform + ".",
             [
               {text: 'OK', onPress: () => {
-                
+
               }},
             ],
             {cancelable: false},
-          ); 
+          );
         }
-      } 
+      }
       catch (err) {
         this.setState({isLoading: false});
-        Alert.alert(Messages.SubscriptionCancelled, '');
+        Alert.alert('Confirm', Messages.SubscriptionCancelled);
       }
     }
     else {
       this.toast.show(Messages.NetWorkError, TOAST_SHOW_TIME);
-    }    
+    }
   }
 
   render() {
@@ -284,35 +284,35 @@ class SubscriptionScreen extends Component {
     return (
       <View style={{flex: 1, backgroundColor: Colors.appColor}}>
         <SafeAreaInsetsContext.Consumer>
-          {insets => 
+          {insets =>
             <View style={{flex: 1, paddingTop: insets.top }} >
               <TopNavBar title="SUBSCRIPTION" align="left" onBack={() => this.onBack()} />
               <View style={styles.container}>
-                <FlatList 
+                <FlatList
                   style={styles.listView}
                   data={products}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({item, index}) => (
-                    <SubscriptionCell 
-                      data={item} 
-                      key={index} 
+                    <SubscriptionCell
+                      data={item}
+                      key={index}
                       index={index}
                       selectedIndex={selectedIndex}
-                      onSelect={(index) => this.setState({selectedIndex: index})} 
+                      onSelect={(index) => this.setState({selectedIndex: index})}
                     />
                   )}
                 />
                 <View style={styles.viewBottom}>
                   {
-                    (subscriptionError && subscriptionError.length > 0) 
+                    (subscriptionError && subscriptionError.length > 0)
                     ? <Text style={styles.errorText}>{subscriptionError}</Text>
                     : null
                   }
-                  <RoundButton 
-                    title="Subscribe" 
-                    theme="blue" 
-                    style={styles.registerButton} 
-                    onPress={this.onSubscribe} 
+                  <RoundButton
+                    title="Subscribe"
+                    theme="blue"
+                    style={styles.registerButton}
+                    onPress={this.onSubscribe}
                   />
                   <TouchableOpacity style={styles.restoreBtn} onPress={() => this.onRestore()}>
                     <Text style={styles.restoreBtnText}>Restore</Text>
@@ -393,7 +393,7 @@ function mapStateToProps(state) {
     currentUser: state.user.currentUser,
     errorMessage: state.user.errorMessage,
     changeSubscriptionStatus: state.user.changeSubscriptionStatus,
-  };  
+  };
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(SubscriptionScreen);

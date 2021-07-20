@@ -38,7 +38,7 @@ class EditProfile extends Component {
       lastName: '',
       email: '',
       phone: '',
-      
+
       firstNameError: '',
       lastNameError: '',
       emailError: '',
@@ -79,13 +79,13 @@ class EditProfile extends Component {
           sb.updateCurrentUserInfo(username, profileUrl, function(response, error) {
           });
         }
-        
+
 
         this.showMessage("Profile has been updated successfully!", true);
       } else if (this.props.updateProfileStatus == Status.FAILURE) {
         this.onFailure(this.props.errorMessage);
-      }      
-    }    
+      }
+    }
   }
 
   showMessage(message, isBack) {
@@ -98,7 +98,7 @@ class EditProfile extends Component {
         }},
       ],
       {cancelable: false},
-    ); 
+    );
   }
 
   onFailure(message) {
@@ -122,10 +122,10 @@ class EditProfile extends Component {
     const { currentUser } = this.props;
     var isValid = true;
     const {
-      firstName, 
-      lastName, 
-      email, 
-      phone, 
+      firstName,
+      lastName,
+      email,
+      phone,
       avatarFile
     } = this.state;
 
@@ -150,9 +150,9 @@ class EditProfile extends Component {
     }
 
     if (isValid) {
-      this.setState({isLoading: true}, () => { 
+      this.setState({isLoading: true}, () => {
         this.updateProfileData();
-      });  
+      });
     }
   }
 
@@ -180,7 +180,7 @@ class EditProfile extends Component {
       user: user,
     });
   }
-  
+
   onTakePicture() {
     this.ActionSheet.show();
   }
@@ -200,7 +200,7 @@ class EditProfile extends Component {
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           this.openImagePicker(index);
-        } 
+        }
         else {
           console.log("Camera permission denied");
         }
@@ -217,7 +217,7 @@ class EditProfile extends Component {
     const options = {
 			mediaType: 'photo',
 		};
-		
+
 		if (index == 0) {
 			launchCamera(options, (response) => {
 				if (response.didCancel) {
@@ -225,7 +225,9 @@ class EditProfile extends Component {
 				} else if (response.error) {
 				  console.log('ImagePicker Error: ', response.error);
 				} else {
-					this.addPhoto(response);
+				  if (response && response.assets.length > 0) {
+					this.addPhoto(response.assets[0]);
+				  }
 				}
 			});
 		}
@@ -236,13 +238,16 @@ class EditProfile extends Component {
 				} else if (response.error) {
 				  console.log('ImagePicker Error: ', response.error);
 				} else {
-					this.addPhoto(response);
+				  if (response && response.assets.length > 0) {
+                    this.addPhoto(response);
+                  }
 				}
 			});
 		}
   }
 
   addPhoto(response) {
+    console.log("add photo =====>", response);
     this.setState({
       avatar: response.uri,
       avatarFile: response
@@ -254,8 +259,8 @@ class EditProfile extends Component {
     for (var i = 0; i < data.length; i++) {
       const item = data[i];
       response.push({
-        id: item._id, 
-        label: item.name, 
+        id: item._id,
+        label: item.name,
         value: item.name
       });
     }
@@ -292,7 +297,7 @@ class EditProfile extends Component {
     return (
       <View style={{flex: 1, backgroundColor: Colors.appColor}}>
         <SafeAreaInsetsContext.Consumer>
-          {insets => 
+          {insets =>
             <View style={{flex: 1, paddingTop: insets.top }} >
               <TopNavBar title="EDIT PROFILE" onBack={() => this.onBack()}/>
                 <View style={styles.container}>
@@ -301,68 +306,68 @@ class EditProfile extends Component {
                       <View style={styles.profileBox}>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                           <EditAvatar avatar={this.state.avatar} style={{ marginTop: -80}} onTakePhoto={() => this.onTakePicture()} />
-                        </View>              
+                        </View>
                         <View style={[styles.rowView, {marginTop: 25}]}>
                           <LabelFormInput
-                            label="First Name" 
+                            label="First Name"
                             type="text"
                             editable={true}
                             placeholderTextColor={Colors.placeholderTextColor}
-                            value={this.state.firstName} 
+                            value={this.state.firstName}
                             errorMessage={this.state.firstNameError}
                             style={{width: '45%'}}
-                            returnKeyType="next"                                       
+                            returnKeyType="next"
                             onSubmitEditing={() => { this.lastNameInput.focus() }}
-                            onChangeText={this.onChangeFirstName} 
+                            onChangeText={this.onChangeFirstName}
                           />
 
                           <LabelFormInput
-                            label="Last Name" 
+                            label="Last Name"
                             type="text"
                             editable={true}
                             placeholderTextColor={Colors.placeholderTextColor}
-                            value={this.state.lastName} 
+                            value={this.state.lastName}
                             errorMessage={this.state.lastNameError}
                             style={{width: '45%'}}
-                            returnKeyType="next"                                       
+                            returnKeyType="next"
                             onRefInput={(input) => { this.lastNameInput = input }}
                             onSubmitEditing={() => { this.emailInput.focus() }}
-                            onChangeText={this.onChangeLastName} 
+                            onChangeText={this.onChangeLastName}
                           />
                         </View>
 
                         <LabelFormInput
-                          label="Email" 
+                          label="Email"
                           type="email"
                           editable={editable}
                           autoCapitalize={false}
                           placeholderTextColor={Colors.placeholderTextColor}
-                          value={this.state.email} 
+                          value={this.state.email}
                           errorMessage={this.state.emailError}
-                          returnKeyType="next"                                       
+                          returnKeyType="next"
                           onRefInput={(input) => { this.emailInput = input }}
                           onSubmitEditing={() => { this.phoneInput.focus() }}
-                          onChangeText={this.onChangeEmail} 
+                          onChangeText={this.onChangeEmail}
                         />
 
                         <LabelFormInput
-                          label="Phone" 
+                          label="Phone"
                           type="phone"
                           editable={true}
                           placeholderTextColor={Colors.placeholderTextColor}
-                          value={this.state.phone} 
+                          value={this.state.phone}
                           errorMessage={this.state.phoneError}
-                          returnKeyType="next"                                       
+                          returnKeyType="next"
                           onRefInput={(input) => { this.phoneInput = input }}
                           onSubmitEditing={() => { this.onMakeChanges() }}
-                          onChangeText={(text) => this.setState({phone: text, phoneError: null})} 
+                          onChangeText={(text) => this.setState({phone: text, phoneError: null})}
                         />
 
                         <View style={styles.centerView}>
-                          <RoundButton 
-                            title="Save Changes" 
-                            theme="blue" 
-                            style={styles.blueButton} 
+                          <RoundButton
+                            title="Save Changes"
+                            theme="blue"
+                            style={styles.blueButton}
                             onPress={() => this.onMakeChanges()} />
                         </View>
                       </View>
@@ -435,8 +440,8 @@ function mapStateToProps(state) {
   return {
     currentUser: state.user.currentUser,
     updateProfileStatus: state.user.updateProfileStatus,
-    errorMessage: state.user.errorMessage,    
-  };  
+    errorMessage: state.user.errorMessage,
+  };
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(EditProfile);
