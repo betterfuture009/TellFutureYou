@@ -1,7 +1,5 @@
-import qs from 'qs';
 import { Platform } from 'react-native';
 import { url } from '../constants';
-import { jsonFetch } from '../functions';
 import { GOOGLE_API_KEY } from '../constants.js'
 import { makeRandomText, filterFileUri } from '../functions';
 

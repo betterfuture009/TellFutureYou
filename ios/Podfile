@@ -22,12 +22,3 @@ target 'TellFutureYou' do
     flipper_post_install(installer)
   end
 end
-
-target 'TellFutureYou-tvOS' do
-  # Pods for TellFutureYou-tvOS
-
-  target 'TellFutureYou-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-end

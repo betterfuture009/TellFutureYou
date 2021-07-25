@@ -1,8 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-import qs from 'qs';
-import { compact } from 'lodash';
-
-import { jsonFetch, fetchHeaders } from '../functions';
 import { url } from '../constants';
 
 export const getUnreadNumber = (user_id) => {
