@@ -239,7 +239,7 @@ class EditProfile extends Component {
 				  console.log('ImagePicker Error: ', response.error);
 				} else {
 				  if (response && response.assets.length > 0) {
-                    this.addPhoto(response);
+                    this.addPhoto(response.assets[0]);
                   }
 				}
 			});

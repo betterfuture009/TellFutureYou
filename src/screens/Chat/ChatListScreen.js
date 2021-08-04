@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  FlatList
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -85,36 +86,56 @@ class ChatScreen extends Component {
 
   updateChannelList(channel) {
     const list = [];
-    const { channelList } = this.state;    
-    this.setState({channelList: list}, function() {
-      var totalUnreadCount = 0;
-      var isExisting = false;
+    const { channelList } = this.state;
+    const index = channelList.findIndex((item) => item.name == channel.name);
 
-      for (var i = 0; i < channelList.length; i++) {
-        if (channelList[i].name === channel.name) {
-          list.push(channel);
-          totalUnreadCount += channel.unreadMessageCount;
-          isExisting = true;
-        } else {
-          list.push(channelList[i]);
-          totalUnreadCount += channelList[i].unreadMessageCount;
-        }        
+    if (index >= 0) {
+      channelList.splice(index, 1, channel);
+    }
+
+    var totalUnreadCount = 0;
+    for (const ch of channelList) {
+      if (ch.unreadMessageCount) {
+        totalUnreadCount += ch.unreadMessageCount;
       }
-      if (!isExisting) {
-        if (channel.lastMessage != null) {
-          list.push(channel);
-        }        
-      }
-
-      this.setState({
-        channelList: list,
-      });
-
+    }
+    this.setState({channelList}, () => {
       this.props.dispatch({
         type: actionTypes.SET_UNREAD_MESSAGE,
         number: totalUnreadCount
       });
     });
+
+
+    // this.setState({channelList: list}, function() {
+    //   var totalUnreadCount = 0;
+    //   var isExisting = false;
+    //
+    //   for (var i = 0; i < channelList.length; i++) {
+    //     if (channelList[i].name === channel.name) {
+    //       list.push(channel);
+    //       totalUnreadCount += channel.unreadMessageCount;
+    //       isExisting = true;
+    //     } else {
+    //       list.push(channelList[i]);
+    //       totalUnreadCount += channelList[i].unreadMessageCount;
+    //     }
+    //   }
+    //   if (!isExisting) {
+    //     if (channel.lastMessage != null) {
+    //       list.push(channel);
+    //     }
+    //   }
+    //
+    //   this.setState({
+    //     channelList: list,
+    //   });
+    //
+    //   this.props.dispatch({
+    //     type: actionTypes.SET_UNREAD_MESSAGE,
+    //     number: totalUnreadCount
+    //   });
+    // });
   }
 
   onUpdateLastMessage=(channel)=> {
@@ -204,33 +225,37 @@ class ChatScreen extends Component {
     const { channelList } = this.state;
 
     const lastSelfMessage = (currentUser && currentUser.lastSelfMessage) ? currentUser.lastSelfMessage : null;
+
     return (
       <View style={styles.pageView}>
         <SwipeListView
           style={styles.listView}
           data={channelList}
-          renderItem={ (rowData, rowMap) => {
+          keyExtractor={(item, index) => item._id}
+          rightOpenValue={-50}
+          renderItem={ ({item, index}) => {
             return (
               <SwipeRow
                 disableRightSwipe={true}
-                disableLeftSwipe={parseInt(rowData.index) == 0 ? true: false}
+                disableLeftSwipe={parseInt(index) == 0 ? true: false}
                 rightOpenValue={-50}
+                previewRepeat={true}
               >
                 <View style={styles.rowBack}>
                 {
-                  (rowData.index != 0)
-                  ? <TouchableOpacity style={styles.trashBtn} onPress={() => this.onRemoveChannel(rowData.item)}>
+                  (index != 0)
+                  ? <TouchableOpacity style={styles.trashBtn} onPress={() => this.onRemoveChannel(item)}>
                       <Image source={Images.icon_red_trash} style={{width: 25, height: 25}} />
                     </TouchableOpacity>
                   : null
                 }
                 </View>
                 <View style={styles.rowFront}>
-                  <ChannelCell 
+                  <ChannelCell
                     currentUser={user}
                     lastSelfMessage={lastSelfMessage}
-                    channel={rowData.item} 
-                    isSelfChannel={parseInt(rowData.index) == 0 ? true: false}
+                    channel={item}
+                    isSelfChannel={parseInt(index) == 0 ? true: false}
                     onPress={this._onChannelPress}
                   />
                 </View>

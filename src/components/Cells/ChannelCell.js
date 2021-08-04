@@ -19,7 +19,7 @@ export default class ChannelCell extends React.PureComponent {
       }
       else {
         return "";
-      }      
+      }
     } else {
       return members[0].nickname;
     }
@@ -32,7 +32,7 @@ export default class ChannelCell extends React.PureComponent {
         return members[1].profileUrl;
       } else {
         return '';
-      }      
+      }
     } else {
       return members[0].profileUrl;
     }
@@ -64,7 +64,7 @@ export default class ChannelCell extends React.PureComponent {
 
       avatar = this.getProfileImage(currentUser, channel);
       if (channel.lastMessage) {
-        const createdAt = channel.lastMessage ? channel.lastMessage.createdAt : '';      
+        const createdAt = channel.lastMessage ? channel.lastMessage.createdAt : '';
         time = Moment(createdAt).fromNow(true);
       }
     }
@@ -84,7 +84,7 @@ export default class ChannelCell extends React.PureComponent {
             <View>
               <Text style={channel.unreadMessageCount > 0 ? styles.boldTitleLabel : styles.titleLabel}>{room}</Text>
               <Text style={styles.lastMessageText} numberOfLines={2} ellipsizeMode="tail">{message}</Text>
-            </View>          
+            </View>
           </View>
           <Text style={styles.timeText}>{time}</Text>
           {
